@@ -1,23 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from 'react';
+
+import { readData } from './supabase/read'
+import TodoPanel from './components/TodoPanel/panel';
+import TodoList from './components/TodoList/List';
 
 function App() {
+
+  const [data, setData] = useState();
+
+  async function read() {
+   const res = await readData()
+   setData(res)
+  } 
+
+  useEffect(() => {
+    read()
+  })
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1 style={{"color":"white"}}>Todo app</h1>
+      <TodoPanel />
+      {data !== [] ? <TodoList TodoData={data} /> : <h2>Loading...</h2>}
     </div>
   );
 }
